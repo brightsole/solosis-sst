@@ -1,127 +1,65 @@
 // import getResolvers from './resolvers';
 
 describe('Resolvers', () => {
-  it('tests ok', () => {
-    expect(true).toBe(true);
+  describe('Queries', () => {
+    describe('item(id): Item', () => {
+      it('fetches an item given an id', () => {
+        expect(true).toBe(true);
+      });
+
+      it('explodes when fetching something nonexistent', () => {
+        expect(true).toBe(true);
+      });
+
+      it("allows you to grab someone else's item", () => {
+        expect(true).toBe(true);
+      });
+    });
+
+    describe('items(id): Item[]', () => {
+      it('fetches all items of a given ownerId', () => {
+        expect(true).toBe(true);
+      });
+
+      it('returns nothing if it is given an unused ownerId', () => {
+        expect(true).toBe(true);
+      });
+
+      it("allows you to grab someone else's items", () => {
+        expect(true).toBe(true);
+      });
+    });
   });
 
-  // describe('Queries', () => {
-  //   it('getUser calls getItem on the dataSource with id', async () => {
-  //     const id = '123';
+  describe('Mutations', () => {
+    describe('createItem(name, description): Item', () => {
+      it('creates an item when given good info', () => {
+        expect(true).toBe(true);
+      });
+      it('explodes if not logged in, because orphan items are verboten', () => {
+        expect(true).toBe(true);
+      });
+    });
 
-  //     const dataSources = {
-  //       userSource: {
-  //         getItem: jest.fn(() => Promise.resolve({})),
-  //       },
-  //     };
+    describe('updateItem(name, description): Item', () => {
+      it('updates an item when given good info', () => {
+        expect(true).toBe(true);
+      });
+      it('explodes if no match for id, because its a required property', () => {
+        expect(true).toBe(true);
+      });
+      it("never lets you overwrite another user's item because auth sets ownerId", () => {
+        expect(true).toBe(true);
+      });
+    });
 
-  //     const {
-  //       Query: { user },
-  //     } = getResolvers();
-
-  //     await user(null, { id }, { dataSources, hashKey });
-  //     expect(dataSources.userSource.getItem).toHaveBeenCalledWith(id, {
-  //       hashKey,
-  //       withMetadata: true,
-  //     });
-  //   });
-
-  //   it('getAllUsers calls getAll with { hashKey }', async () => {
-  //     // the expectation is that most queries will be getting small groups related to a hash id
-  //     // that hash id is the user id in this implementation
-  //     const dataSources = {
-  //       userSource: {
-  //         getAll: jest.fn(() => Promise.resolve([])),
-  //       },
-  //     };
-
-  //     const {
-  //       Query: { getAllUsers },
-  //     } = getResolvers();
-
-  //     await getAllUsers(null, {}, { dataSources, hashKey });
-  //     expect(dataSources.userSource.getAll).toHaveBeenCalledWith({ hashKey, withMetadata: true });
-  //   });
-
-  //   it('users calls query with { ...query }', async () => {
-  //     const input = {
-  //       name: { $contains: 'floop' },
-  //     };
-  //     // this is the slower dynamodb scan that has a more open query structure than `getAll`
-  //     const dataSources = {
-  //       userSource: {
-  //         query: jest.fn(() => Promise.resolve([])),
-  //       },
-  //     };
-
-  //     const {
-  //       Query: { users },
-  //     } = getResolvers();
-
-  //     await users(null, { input }, { dataSources });
-  //     expect(dataSources.userSource.query).toHaveBeenCalledWith(input, { withMetadata: true });
-  //   });
-
-  //   it('reference resolver calls getItem on the dataSource with { id }', async () => {
-  //     const id = '123';
-
-  //     const dataSources = {
-  //       userSource: {
-  //         getItem: jest.fn(() => Promise.resolve({})),
-  //       },
-  //     };
-
-  //     const {
-  //       User: { __resolveReference },
-  //     } = getResolvers();
-
-  //     await __resolveReference({ id }, { dataSources, hashKey });
-  //     expect(dataSources.userSource.getItem).toHaveBeenCalledWith(id, {
-  //       hashKey,
-  //       withMetadata: true,
-  //     });
-  //   });
-  // });
-
-  // describe('Mutations', () => {
-  //   it('createUser calls createItem on the dataSource with { id, name }', async () => {
-  //     const input = { id: '123', name: 'widget' };
-
-  //     const dataSources = {
-  //       userSource: {
-  //         createItem: jest.fn(() => Promise.resolve({})),
-  //       },
-  //     };
-
-  //     const {
-  //       Mutation: { createUser },
-  //     } = getResolvers();
-
-  //     await createUser(null, { input }, { dataSources, hashKey });
-  //     expect(dataSources.userSource.createItem).toHaveBeenCalledWith(input, {
-  //       hashKey,
-  //       withMetadata: true,
-  //     });
-  //   });
-
-  //   it('updateUser calls updateItem on the dataSource with { id, name }', async () => {
-  //     const input = { id: '123', name: 'widget' };
-
-  //     const dataSources = {
-  //       userSource: {
-  //         updateItem: jest.fn(() => Promise.resolve({})),
-  //       },
-  //     };
-
-  //     const {
-  //       Mutation: { updateUser },
-  //     } = getResolvers();
-
-  //     await updateUser(null, { input }, { dataSources, hashKey });
-  //     expect(dataSources.userSource.updateItem).toHaveBeenCalledWith(input, {
-  //       hashKey,
-  //       withMetadata: true,
-  //     });
-  //   });
-  // });
+    describe('deleteItem(name, description): Item', () => {
+      it('deletes an item when given good info', () => {
+        expect(true).toBe(true);
+      });
+      it("explodes if the auth owner id doesn't match the target item", () => {
+        expect(true).toBe(true);
+      });
+    });
+  });
 });

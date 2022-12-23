@@ -1,19 +1,21 @@
-# auth
+# items
 
 ## INFO
+
+This is a generic item CRUD/GraphQL service. It creates, updates, deletes, and allows for direct gets as well as supporting an _ok_ query language.
 ### BEFORE RUNNING THE SERVICE
 - log into the aws account
 - create a new user, assign permissions directly to it, the only permission being: administrator access
 - copy the KEY ID and the SECRET ACCESS KEY
 - add them to the `~/.aws/credentials` like this:
 ```
-[boarganise]
+[your-application]
 aws_access_key_id = KEY_ID
 aws_secret_access_key = SECRET_KEY
 ```
 - add configuration to your `~/.aws/config` as well:
 ```
-[profile boarganise]
+[profile your-application]
 output=json
 region=ap-southeast-2
 ```
@@ -26,5 +28,6 @@ deploy the service to the production environment once changes approved with `mak
 run the command `make test`
 
 ## TODOS
-1. test setups are all pretty broken after the move to SST
-2. load `.env` credits, and solve a way to have them stored in the `config` object instead of **only on drew's machine**
+1. add the damn tests
+1. load `.env` credits, and solve a way to have them stored in the `config` object instead of **only on drew's machine**
+1. load the url into a config that we can read in the federation gateway

@@ -1,1 +1,1 @@
-export { default as MagicUserSchema } from './MagicUser';
+export { default as Item } from './Item';

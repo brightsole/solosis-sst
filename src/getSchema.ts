@@ -4,41 +4,33 @@ export default () => gql`
   scalar DateTime
   scalar JSONObject
 
-  input SettingsInput {
-    darkMode: Boolean
-  }
-
-  type Settings {
-    darkMode: Boolean
-  }
-
-  type User @key(fields: "id") {
+  type Item @key(fields: "id") {
     id: ID!
-    email: ID!
-    name: String!
-    settings: Settings
+    name: String
+    description: String
     createdAt: DateTime
     updatedAt: DateTime
   }
 
-  input UpdateUserInput {
+  input UpdateItemInput {
     id: String!
     name: String
-    email: String
-    settings: SettingsInput
+    ownerId: String!
+    description: String
   }
 
-  type AffirmativeEmpty {
-    ok: Boolean
+  input QueryObject {
+    ownerId: String
   }
 
   type Query {
-    user(id: ID!): User
+    item(id: ID!): Item
+    items(query: QueryObject!): [Item]
   }
 
   type Mutation {
-    sendMagicLink(email: String!): AffirmativeEmpty
-    updateUser(input: UpdateUserInput!): User
-    createMagicUser(name: String!, secretToken: String!): User
+    updateItem(input: UpdateItemInput!): Item
+    createItem(name: String, description: String): Item
+    deleteItem(id: String!): Item
   }
 `;

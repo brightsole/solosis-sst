@@ -1,6 +1,6 @@
 // import type { Entity } from 'dynamodb-toolbox';
 import type { Model } from 'dynamoose/dist/Model';
-import type { Item } from 'dynamoose/dist/Item';
+import type { Item as DynamooseItem } from 'dynamoose/dist/Item';
 import type {
   Context as LambdaContext,
   APIGatewayProxyEventV2,
@@ -13,29 +13,23 @@ export interface LambdaContextFunctionArgument {
   context: LambdaContext;
 }
 
-export type UserType = {
-  secretToken?: string | null;
+export type ItemType = {
+  description?: string;
   createdAt: string;
   updatedAt: string;
-  settings: any;
-  email: string;
+  ownerId: string;
   name?: string;
-  type: string; // magic | google | etc.
   id: string;
 };
-export type MagicUserItem = Item & UserType;
+export type Item = DynamooseItem & ItemType;
 
 export type IdObject = {
   id: string;
 };
 
 export type Context = {
-  MagicUser: Model<MagicUserItem>;
-  setCookies: string[];
-  setHeaders: string[];
-  email?: string;
-  type?: string;
-  id?: string;
+  Item: Model<Item>;
+  ownerId?: string;
   event: any;
 };
 

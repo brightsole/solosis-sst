@@ -13,7 +13,7 @@ export function Api({ stack }: StackContext) {
   const api = new GraphQLApi(stack, 'Api', {
     defaults: {
       function: {
-        permissions: [db.table, 'ses:SendEmail'],
+        permissions: [db.table],
         environment: { TABLE_NAME: db.table.tableName },
         timeout: 20,
       },

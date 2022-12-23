@@ -1,14 +1,6 @@
 import { gql } from 'graphql-tag';
-import MockSES from 'aws-sdk/clients/ses';
+import { nanoid } from 'nanoid';
 import getGraphqlServer from '../test/getGraphqlServer';
-
-jest.mock('aws-sdk/clients/sesv2', () => {
-  const mSES = {
-    sendEmail: jest.fn().mockReturnThis(),
-    promise: jest.fn(),
-  };
-  return jest.fn(() => mSES);
-});
 
 // INTEGRATION TEST OF THE FULL PATH
 // only test for completion of high level access
@@ -17,39 +9,58 @@ jest.mock('aws-sdk/clients/sesv2', () => {
 describe('Resolver full path', () => {
   it('creates an item without error', async () => {
     const server = getGraphqlServer();
-    new MockSES();
 
-    const signUpMutation = gql`
-      mutation SendMagicLink($email: String!) {
-        sendMagicLink(email: $email) {
-          ok
+    const createItemMutation = gql`
+      mutation CreateItem($name: String, $description: String) {
+        createItem(name: $name, description: $description) {
+          id
+          name
+          description
         }
       }
     `;
 
     const create = jest.fn();
 
+    const ownerId = 'that guy who makes things';
+
+    const name = 'the diner of despair';
+    const description = 'a horrible place where the clientelle go to get bitten, not a bite';
+
+    create.mockResolvedValueOnce({
+      id: nanoid(),
+      name,
+      description,
+      ownerId,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    });
+
     const { body } = (await server.executeOperation(
       {
-        query: signUpMutation,
-        variables: { email: 'bob@example.com' },
+        query: createItemMutation,
+        variables: {
+          name,
+          description,
+        },
       },
       {
         contextValue: {
-          setHeaders: { push: jest.fn() },
-          setCookies: { push: jest.fn() },
-          MagicUser: { create },
+          ownerId,
+          Item: { create },
         },
       }
     )) as any;
 
     expect(body.singleResult.errors).toBeFalsy();
-    expect(body.singleResult.data).toEqual({ sendMagicLink: { ok: true } });
+    expect(body.singleResult.data).toEqual({
+      createItem: { id: expect.any(String), name, description },
+    });
     expect(create).toHaveBeenCalledWith({
-      email: 'bob@example.com',
-      type: 'magic',
+      name,
+      description,
       id: expect.any(String),
-      secretToken: expect.any(String),
+      ownerId,
     });
   });
 });
