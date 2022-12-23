@@ -1,13 +1,13 @@
 {
-  "name": "auth",
+  "name": "item",
   "version": "0.0.0",
-  "description": "auth",
+  "description": "item lambda graphql crud with sst and dynamoose",
   "keywords": [
     "new",
     "package",
     "boarganize"
   ],
-  "repository": "git@github.com:boardgamesesh/auth.git",
+  "repository": "git@github.com:brightsole/solosis-sst.git",
   "author": "Drew Showalter <maelstroswim@gmail.com>",
   "license": "MIT",
   "scripts": {
