@@ -1,32 +1,84 @@
-// import getResolvers from './resolvers';
+import getResolvers from './getResolvers';
 
 describe('Resolvers', () => {
   describe('Queries', () => {
+    const { Query } = getResolvers();
     describe('item(id): Item', () => {
-      it('fetches an item given an id', () => {
-        expect(true).toBe(true);
+      it('fetches an item given an id', async () => {
+        const Item = {
+          get: jest.fn().mockResolvedValue({ id: 'niner' }),
+        } as any;
+
+        const item = await Query.item(null, { id: 'niner' }, { Item, event: {} });
+        expect(item).toEqual({ id: 'niner' });
       });
 
-      it('explodes when fetching something nonexistent', () => {
-        expect(true).toBe(true);
+      it('returns undefined when fetching something nonexistent', async () => {
+        const Item = {
+          get: jest.fn().mockResolvedValue(undefined),
+        } as any;
+
+        const item = await Query.item(null, { id: 'niner' }, { Item, event: {} });
+        expect(item).toEqual(undefined);
       });
 
-      it("allows you to grab someone else's item", () => {
-        expect(true).toBe(true);
+      it("allows you to grab someone else's item", async () => {
+        const Item = {
+          get: jest.fn().mockResolvedValue({ id: 'niner', owner: 'not-you' }),
+        } as any;
+
+        const item = await Query.item(null, { id: 'niner' }, { Item, event: {} });
+        expect(item).toEqual({ id: 'niner', owner: 'not-you' });
       });
     });
 
     describe('items(id): Item[]', () => {
-      it('fetches all items of a given ownerId', () => {
-        expect(true).toBe(true);
+      it('fetches all items of a given ownerId', async () => {
+        const Item = {
+          query: jest.fn().mockReturnThis(),
+          eq: jest.fn().mockReturnThis(),
+          using: jest.fn().mockReturnThis(),
+          exec: jest.fn().mockResolvedValue([
+            { id: 'niner', owner: 'you' },
+            { id: 'five', owner: 'you' },
+          ]),
+        } as any;
+
+        const items = await Query.items(null, { ownerId: 'you' }, { Item, event: {} });
+        expect(items).toEqual([
+          { id: 'niner', owner: 'you' },
+          { id: 'five', owner: 'you' },
+        ]);
       });
 
-      it('returns nothing if it is given an unused ownerId', () => {
-        expect(true).toBe(true);
+      it('returns nothing if it is given an unused ownerId', async () => {
+        const Item = {
+          query: jest.fn().mockReturnThis(),
+          eq: jest.fn().mockReturnThis(),
+          using: jest.fn().mockReturnThis(),
+          exec: jest.fn().mockResolvedValue([]),
+        } as any;
+
+        const items = await Query.items(null, { ownerId: 'nonexistent' }, { Item, event: {} });
+        expect(items).toEqual([]);
       });
 
-      it("allows you to grab someone else's items", () => {
-        expect(true).toBe(true);
+      it("allows you to grab someone else's items", async () => {
+        const Item = {
+          query: jest.fn().mockReturnThis(),
+          eq: jest.fn().mockReturnThis(),
+          using: jest.fn().mockReturnThis(),
+          exec: jest.fn().mockResolvedValue([
+            { id: 'niner', owner: 'not-you' },
+            { id: 'five', owner: 'not-you' },
+          ]),
+        } as any;
+
+        const items = await Query.items(null, { ownerId: 'not-you' }, { Item, event: {} });
+        expect(items).toEqual([
+          { id: 'niner', owner: 'not-you' },
+          { id: 'five', owner: 'not-you' },
+        ]);
       });
     });
   });
