@@ -1,3 +1,4 @@
+import { Condition } from 'dynamoose';
 import getResolvers from './getResolvers';
 
 describe('Resolvers', () => {
@@ -84,24 +85,113 @@ describe('Resolvers', () => {
   });
 
   describe('Mutations', () => {
+    const { Mutation } = getResolvers();
     describe('createItem(name, description): Item', () => {
-      it('creates an item when given good info', () => {
-        expect(true).toBe(true);
+      it('creates an item when given good info', async () => {
+        const Item = {
+          create: jest.fn().mockResolvedValue({
+            id: 'niner',
+            name: 'Niner',
+            ownerId: 'yourself',
+            description: 'My favorite number',
+          }),
+        } as any;
+
+        const item = await Mutation.createItem(
+          null,
+          { name: 'Niner', description: 'My favorite number' },
+          { Item, event: {}, ownerId: 'yourself' }
+        );
+        expect(item).toEqual({
+          id: 'niner',
+          name: 'Niner',
+          ownerId: 'yourself',
+          description: 'My favorite number',
+        });
       });
-      it('explodes if not logged in, because orphan items are verboten', () => {
-        expect(true).toBe(true);
+
+      it('explodes if not logged in, because orphan items are verboten', async () => {
+        const Item = {
+          create: jest
+            .fn()
+            .mockResolvedValue({ id: 'niner', name: 'Niner', description: 'My favorite number' }),
+        } as any;
+
+        await expect(
+          Mutation.createItem(
+            null,
+            { name: 'Niner', description: 'My favorite number' },
+            { Item, event: {} }
+          )
+        ).rejects.toThrow('Unauthorized');
       });
     });
 
     describe('updateItem(name, description): Item', () => {
-      it('updates an item when given good info', () => {
-        expect(true).toBe(true);
+      it('updates an item when given good info', async () => {
+        const Item = {
+          update: jest.fn().mockResolvedValue({
+            id: 'niner',
+            name: 'Niner',
+            ownerId: 'yourself',
+            description: 'My favorite number',
+          }),
+          get: jest.fn().mockResolvedValue({
+            id: 'niner',
+            name: 'Niner',
+            ownerId: 'yourself',
+            description: 'My favorite number',
+          }),
+        } as any;
+
+        const item = await Mutation.updateItem(
+          null,
+          { input: { id: 'niner', name: 'Niner', description: 'My favorite number' } },
+          { Item, event: {}, ownerId: 'yourself' }
+        );
+        expect(item).toEqual({
+          id: 'niner',
+          name: 'Niner',
+          ownerId: 'yourself',
+          description: 'My favorite number',
+        });
       });
-      it('explodes if no match for id, because its a required property', () => {
-        expect(true).toBe(true);
+
+      it('explodes if no match for id, because its a required property', async () => {
+        const Item = {
+          update: jest.fn().mockRejectedValue({
+            code: 'ConditionalCheckFailedException',
+          }),
+        } as any;
+
+        await expect(
+          Mutation.updateItem(
+            null,
+            { input: { id: 'niner', name: 'Niner', description: 'My favorite number' } },
+            { Item, event: {}, ownerId: 'yourself' }
+          )
+        ).rejects.toThrow('Item deleted or owned by another user');
+        expect(Item.update).toHaveBeenCalledWith(
+          { id: 'niner' },
+          { description: 'My favorite number', id: 'niner', name: 'Niner', ownerId: 'yourself' },
+          { condition: expect.any(Condition), returnValues: 'ALL_NEW' }
+        );
       });
-      it("never lets you overwrite another user's item because auth sets ownerId", () => {
-        expect(true).toBe(true);
+
+      it("never lets you overwrite another user's item because auth sets ownerId", async () => {
+        const Item = {
+          update: jest.fn().mockRejectedValue({
+            code: 'ConditionalCheckFailedException',
+          }),
+        } as any;
+
+        await expect(
+          Mutation.updateItem(
+            null,
+            { input: { id: 'niner', name: 'Niner', description: 'My favorite number' } },
+            { Item, event: {}, ownerId: 'yourself' }
+          )
+        ).rejects.toThrow('Item deleted or owned by another user');
       });
     });
 

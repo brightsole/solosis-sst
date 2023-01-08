@@ -17,13 +17,33 @@ export default () => ({
       _: any,
       { name, description }: { name?: string; description?: string },
       { ownerId, Item }: Context
-    ): Promise<ItemType> => Item.create({ id: nanoid(), name, description, ownerId }),
+    ): Promise<ItemType> => {
+      if (!ownerId) throw new Error('Unauthorized');
+      return Item.create({ id: nanoid(), name, description, ownerId });
+    },
 
     updateItem: async (
       _: any,
       { input: partialItem }: { input: Partial<ItemType> },
       { ownerId, Item }: Context
-    ): Promise<ItemType | undefined> => Item.update({ ...partialItem, ownerId }),
+    ): Promise<any> => {
+      try {
+        const updatedItem = await Item.update(
+          { id: partialItem.id },
+          { ...partialItem, ownerId },
+          {
+            condition: new Condition().where('ownerId').eq(ownerId).and().attribute('id').exists(),
+            returnValues: 'ALL_NEW',
+          }
+        );
+        return updatedItem; // you must await, otherwise the error will be swallowed
+      } catch (error: any) {
+        if (error.code === 'ConditionalCheckFailedException') {
+          throw new Error('Item deleted or owned by another user');
+        }
+        throw error;
+      }
+    },
 
     deleteItem: async (_: any, { id }: IdObject, { ownerId, Item }: Context): Promise<void> =>
       Item.delete(id, { condition: new Condition().where('ownerId').eq(ownerId) }),

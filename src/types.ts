@@ -15,8 +15,8 @@ export interface LambdaContextFunctionArgument {
 
 export type ItemType = {
   description?: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: number;
+  updatedAt: number;
   ownerId: string;
   name?: string;
   id: string;
