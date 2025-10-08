@@ -1,7 +1,10 @@
 import { ApolloServer } from '@apollo/server';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 import { maxDepthRule } from '@escape.tech/graphql-armor-max-depth';
-import { startServerAndCreateLambdaHandler } from '@as-integrations/aws-lambda';
+import {
+  startServerAndCreateLambdaHandler,
+  handlers,
+} from '@as-integrations/aws-lambda';
 import getResolvers from './getResolvers';
 import setContext from './setContext';
 import getSchema from './getSchema';
@@ -24,6 +27,10 @@ const createServer = () => {
   return server;
 };
 
-export const handler = startServerAndCreateLambdaHandler(createServer(), {
-  context: setContext,
-});
+export const handler = startServerAndCreateLambdaHandler(
+  createServer(),
+  handlers.createAPIGatewayProxyEventV2RequestHandler(),
+  {
+    context: setContext,
+  },
+);

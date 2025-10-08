@@ -30,5 +30,4 @@ run the command `make test`
 ## TODOS
 1. load `.env` credits, and solve a way to have them stored in the `config` object instead of **only on drew's machine**
 1. load the url into a config that we can read in the federation gateway
-1. tests for delete
 1. REST routes on the `/item` url with a broken-out controller. That way we can have complicated nested calls without having large gql request syntax.

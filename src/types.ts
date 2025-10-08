@@ -22,6 +22,7 @@ export type ItemType = {
   id: string;
 };
 export type Item = DynamooseItem & ItemType;
+export type ModelType = Model<Item>;
 
 export type IdObject = {
   id: string;
@@ -30,7 +31,7 @@ export type IdObject = {
 export type Context = {
   Item: Model<Item>;
   ownerId?: string;
-  event: any;
+  event: unknown;
 };
 
 export type Token = {
@@ -40,5 +41,5 @@ export type Token = {
 };
 
 export type Affirmative = {
-  ok: Boolean;
+  ok: boolean;
 };

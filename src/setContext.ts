@@ -7,7 +7,7 @@ import type {
   Context,
   // Token
 } from './types';
-import { Item as ItemModel } from './schemas';
+import ItemModel from './Item.schema';
 import getEnv from './getEnv';
 
 // type DecodedToken = {
@@ -16,10 +16,10 @@ import getEnv from './getEnv';
 // } & Token;
 
 // sets the auth header so we can securely be logged in by the magic link
-const setContext: ContextFunction<[LambdaContextFunctionArgument], BaseContext> = async ({
-  event,
-  context,
-}): Promise<Context> => {
+const setContext: ContextFunction<
+  [LambdaContextFunctionArgument],
+  BaseContext
+> = async ({ event, context }): Promise<Context> => {
   context.callbackWaitsForEmptyEventLoop = false;
 
   // const [token] = (event.headers.cookie ?? '').split(';');

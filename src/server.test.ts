@@ -25,7 +25,8 @@ describe('Resolver full path', () => {
     const ownerId = 'that guy who makes things';
 
     const name = 'the diner of despair';
-    const description = 'a horrible place where the clientelle go to get bitten, not a bite';
+    const description =
+      'a horrible place where the clientelle go to get bitten, not a bite';
 
     create.mockResolvedValueOnce({
       id: nanoid(),
@@ -36,7 +37,7 @@ describe('Resolver full path', () => {
       updatedAt: new Date(),
     });
 
-    const { body } = (await server.executeOperation(
+    const { body } = await server.executeOperation(
       {
         query: createItemMutation,
         variables: {
@@ -49,11 +50,17 @@ describe('Resolver full path', () => {
           ownerId,
           Item: { create },
         },
-      }
-    )) as any;
+      },
+    );
 
-    expect(body.singleResult.errors).toBeFalsy();
-    expect(body.singleResult.data).toEqual({
+    if (body.kind !== 'single') {
+      throw new Error('Expected a single GraphQL response');
+    }
+
+    const { singleResult } = body;
+
+    expect(singleResult.errors).toBeUndefined();
+    expect(singleResult.data).toEqual({
       createItem: { id: expect.any(String), name, description },
     });
     expect(create).toHaveBeenCalledWith({
