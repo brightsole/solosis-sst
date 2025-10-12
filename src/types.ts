@@ -1,4 +1,3 @@
-// import type { Entity } from 'dynamodb-toolbox';
 import type { Model } from 'dynamoose/dist/Model';
 import type { Item as DynamooseItem } from 'dynamoose/dist/Item';
 import type {
@@ -32,12 +31,6 @@ export type Context = {
   Item: Model<Item>;
   ownerId?: string;
   event: unknown;
-};
-
-export type Token = {
-  id: string;
-  type: string; // magic | google | etc.
-  email: string;
 };
 
 export type Affirmative = {

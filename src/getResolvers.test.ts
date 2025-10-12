@@ -1,9 +1,11 @@
 import { Condition } from 'dynamoose';
-import getResolvers from './getResolvers';
+import resolvers from './resolvers';
 import { ModelType, Item } from './types';
-import { Query } from 'dynamoose/dist/ItemRetriever';
+import { Query as QueryType } from 'dynamoose/dist/ItemRetriever';
 
-type ItemModelMock = jest.Mocked<ModelType & Query<Item>>;
+const { Query, Mutation } = resolvers;
+
+type ItemModelMock = jest.Mocked<ModelType & QueryType<Item>>;
 
 const createItemModelMock = (
   overrides: Partial<ItemModelMock> = {},
@@ -23,7 +25,6 @@ const createItemModelMock = (
 
 describe('Resolvers', () => {
   describe('Queries', () => {
-    const { Query } = getResolvers();
     describe('item(id): Item', () => {
       it('fetches an item given an id', async () => {
         const Item = createItemModelMock({
@@ -120,7 +121,6 @@ describe('Resolvers', () => {
   });
 
   describe('Mutations', () => {
-    const { Mutation } = getResolvers();
     describe('createItem(name, description): Item', () => {
       it('creates an item when given good info', async () => {
         const Item = createItemModelMock({

@@ -3,7 +3,7 @@ import { GraphQLDateTime, GraphQLJSONObject } from 'graphql-scalars';
 import { nanoid } from 'nanoid';
 import { Context, IdObject, ItemType } from './types';
 
-export default () => ({
+export default {
   Query: {
     item: async (_: undefined, { id }: { id: string }, { Item }: Context) =>
       Item.get({ id }),
@@ -74,4 +74,4 @@ export default () => ({
 
   DateTime: GraphQLDateTime,
   JSONObject: GraphQLJSONObject,
-});
+};

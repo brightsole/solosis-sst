@@ -1,8 +1,14 @@
 import { gql } from 'graphql-tag';
 
-export default () => gql`
+export default gql`
   scalar DateTime
   scalar JSONObject
+
+  extend schema
+    @link(
+      url: "https://specs.apollo.dev/federation/v2.0"
+      import: ["@key", "@shareable"]
+    )
 
   type Item @key(fields: "id") {
     id: ID!

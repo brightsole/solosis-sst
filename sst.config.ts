@@ -26,6 +26,18 @@ export default $config({
       link: [itemsTable],
     });
 
+    // new sst.aws.Cron('KeepWarmCron', {
+    //   // every 5 minutes, roughly 8am to 6pm, Mon-Fri, Australia/Sydney time
+    //   // keeps it warm at all times during business hours
+    //   schedule: 'cron(*/5 21-23,0-8 ? * SUN-FRI *)',
+    //   job: {
+    //     handler: 'src/keepWarm.handler',
+    //     environment: {
+    //       PING_URL: api.url,
+    //     },
+    //   },
+    // });
+
     api.route('ANY /', {
       handler: 'src/server.handler',
       runtime: 'nodejs18.x',

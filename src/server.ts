@@ -1,18 +1,15 @@
 import { ApolloServer } from '@apollo/server';
 import { buildSubgraphSchema } from '@apollo/subgraph';
-import { maxDepthRule } from '@escape.tech/graphql-armor-max-depth';
 import {
   startServerAndCreateLambdaHandler,
   handlers,
 } from '@as-integrations/aws-lambda';
-import getResolvers from './getResolvers';
+import resolvers from './resolvers';
 import setContext from './setContext';
-import getSchema from './getSchema';
+import typeDefs from './typeDefs';
 
 const createServer = () => {
-  const typeDefs = getSchema();
-  const resolvers = getResolvers();
-
+  console.time('createServer');
   const server = new ApolloServer({
     schema: buildSubgraphSchema([
       {
@@ -20,9 +17,9 @@ const createServer = () => {
         resolvers,
       },
     ]),
-
-    validationRules: [maxDepthRule({ n: 7 })],
+    maxRecursiveSelections: 7,
   });
+  console.timeEnd('createServer');
 
   return server;
 };

@@ -3,9 +3,12 @@
   "version": "0.0.0",
   "description": "item lambda graphql crud with sst and dynamoose",
   "keywords": [
-    "new",
     "package",
-    "boarganize"
+    "sst",
+    "dynamoose",
+    "graphql",
+    "lambda",
+    "crud"
   ],
   "repository": "git@github.com:brightsole/solosis-sst.git",
   "author": "Drew Showalter <maelstroswim@gmail.com>",
@@ -14,11 +17,6 @@
     "start": "sst dev",
     "lint": "eslint --fix .",
     "test": "jest"
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix"
-    ]
   },
   "devDependencies": {
     "@babel/preset-env": "^7.28.3",
