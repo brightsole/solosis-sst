@@ -29,7 +29,7 @@
     "eslint-plugin-prettier": "^5.5.4",
     "husky": "^9.1.7",
     "jest": "^30.2.0",
-    "sst": "^3.17.14",
+    "sst": "^3.17.19",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.0"
   },
