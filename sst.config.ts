@@ -10,7 +10,7 @@ export default $config({
     };
   },
   async run() {
-    const itemsTable = new sst.aws.Dynamo('ItemsTable', {
+    const itemsTable = new sst.aws.Dynamo('Items', {
       fields: {
         id: 'string',
         ownerId: 'string',
