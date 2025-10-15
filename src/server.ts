@@ -7,9 +7,9 @@ import {
 import resolvers from './resolvers';
 import setContext from './setContext';
 import typeDefs from './typeDefs';
+import { ApolloServerPluginInlineTraceDisabled } from '@apollo/server/plugin/disabled';
 
 const createServer = () => {
-  console.time('createServer');
   const server = new ApolloServer({
     schema: buildSubgraphSchema([
       {
@@ -18,8 +18,8 @@ const createServer = () => {
       },
     ]),
     maxRecursiveSelections: 7,
+    plugins: [ApolloServerPluginInlineTraceDisabled()],
   });
-  console.timeEnd('createServer');
 
   return server;
 };
