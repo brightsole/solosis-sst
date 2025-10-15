@@ -5,7 +5,7 @@ export default $config({
     return {
       name: 'items-service',
       removal: input?.stage === 'production' ? 'retain' : 'remove',
-      protect: ['production'].includes(input?.stage),
+      protect: input?.stage === 'production',
       home: 'aws',
     };
   },
@@ -37,6 +37,19 @@ export default $config({
     //     },
     //   },
     // });
+
+    // Store the API URL as a CloudFormation output for federation lookup
+    new aws.ssm.Parameter('ItemsApiUrl', {
+      name: `/sst/${$app.name}/${$app.stage}/api-url`,
+      type: 'String',
+      value: api.url,
+      description: `API Gateway URL for ${$app.name} ${$app.stage}`,
+    });
+    // roughly how to get the api url in fed gateway:
+    // const itemsApiUrl = await aws.ssm.getParameter({
+    //   name: `/sst/items-service/${$app.stage}/api-url`,
+    // });
+    // then you put it into the environment below
 
     api.route('ANY /', {
       handler: 'src/server.handler',

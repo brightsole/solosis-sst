@@ -1,7 +1,7 @@
 import { Condition } from 'dynamoose';
 import { GraphQLDateTime, GraphQLJSONObject } from 'graphql-scalars';
 import { nanoid } from 'nanoid';
-import { Context, IdObject, ItemType } from './types';
+import { Context, IdObject, ItemType, Affirmative } from './types';
 
 export default {
   Query: {
@@ -60,10 +60,12 @@ export default {
       _: undefined,
       { id }: IdObject,
       { ownerId, Item }: Context,
-    ): Promise<void> =>
-      Item.delete(id, {
+    ): Promise<Affirmative> => {
+      await Item.delete(id, {
         condition: new Condition().where('ownerId').eq(ownerId),
-      }),
+      });
+      return { ok: true };
+    },
   },
 
   Item: {

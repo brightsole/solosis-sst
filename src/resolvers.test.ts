@@ -266,7 +266,7 @@ describe('Resolvers', () => {
             { id: 'niner' },
             { Item, event: {}, ownerId: 'yourself' },
           ),
-        ).resolves.toBeUndefined();
+        ).resolves.toEqual({ ok: true });
 
         expect(Item.delete).toHaveBeenCalledWith('niner', {
           condition: expect.any(Condition),

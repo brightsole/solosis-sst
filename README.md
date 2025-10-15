@@ -32,6 +32,5 @@ run the service locally with `npm start`
 deploy the service to sst by configuring the github action. you'll need to set up OIDC and aws creds. I'm a repo not a library; look it up.
 
 ## TODOS
-1. load the url into a config that we can read in the federation gateway
 1. REST routes on the `/item` url with a broken-out controller. That way we can have complicated nested calls without having large gql request syntax.
 1. expand the query language to allow for better lookin' up stuff

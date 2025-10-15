@@ -10,6 +10,10 @@ export default gql`
       import: ["@key", "@shareable"]
     )
 
+  type Affirmative {
+    ok: Boolean!
+  }
+
   type Item @key(fields: "id") {
     id: ID!
     name: String
@@ -37,6 +41,6 @@ export default gql`
   type Mutation {
     updateItem(input: UpdateItemInput!): Item
     createItem(name: String, description: String): Item
-    deleteItem(id: String!): Item
+    deleteItem(id: String!): Affirmative
   }
 `;
