@@ -21,6 +21,13 @@ describe('Resolver full path', () => {
     `;
 
     const create = jest.fn();
+    const itemController = {
+      create,
+      getById: jest.fn(),
+      listByOwner: jest.fn(),
+      update: jest.fn(),
+      remove: jest.fn(),
+    };
 
     const ownerId = 'that guy who makes things';
 
@@ -48,7 +55,7 @@ describe('Resolver full path', () => {
       {
         contextValue: {
           ownerId,
-          Item: { create },
+          itemController,
         },
       },
     );
@@ -63,11 +70,6 @@ describe('Resolver full path', () => {
     expect(singleResult.data).toEqual({
       createItem: { id: expect.any(String), name, description },
     });
-    expect(create).toHaveBeenCalledWith({
-      name,
-      description,
-      id: expect.any(String),
-      ownerId,
-    });
+    expect(create).toHaveBeenCalledWith({ name, description }, ownerId);
   });
 });

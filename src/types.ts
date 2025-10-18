@@ -5,6 +5,7 @@ import type {
   APIGatewayProxyEventV2,
   APIGatewayProxyEvent,
 } from 'aws-lambda';
+import { createItemController } from './itemController';
 
 export type GatewayEvent = APIGatewayProxyEvent | APIGatewayProxyEventV2;
 export interface LambdaContextFunctionArgument {
@@ -12,7 +13,7 @@ export interface LambdaContextFunctionArgument {
   context: LambdaContext;
 }
 
-export type ItemType = {
+export type Item = {
   description?: string;
   createdAt: number;
   updatedAt: number;
@@ -20,15 +21,15 @@ export type ItemType = {
   name?: string;
   id: string;
 };
-export type Item = DynamooseItem & ItemType;
-export type ModelType = Model<Item>;
+export type DBItem = DynamooseItem & Item;
+export type ModelType = Model<DBItem>;
 
 export type IdObject = {
   id: string;
 };
 
 export type Context = {
-  Item: Model<Item>;
+  itemController: ReturnType<typeof createItemController>;
   ownerId?: string;
   event: unknown;
 };

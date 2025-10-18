@@ -9,7 +9,7 @@ declare module "sst" {
       "type": "sst.aws.ApiGatewayV2"
       "url": string
     }
-    "ItemsTable": {
+    "Items": {
       "name": string
       "type": "sst.aws.Dynamo"
     }

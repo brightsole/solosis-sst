@@ -1,39 +1,13 @@
-name: Auto merge basic check
+name: Deploy preview environment
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
-  install-and-test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run ESLint
-        run: npm run lint
-
-      - name: Run tests
-        run: npm test
-
-  sst-diff:
-    needs: install-and-test
+  deploy-preview:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -71,5 +45,5 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
           mask-aws-account-id: true
 
-      - name: Check SST diff
-        run: npx sst diff --stage $SST_STAGE
+      - name: Deploy SST stack
+        run: npx sst deploy --stage $SST_STAGE
