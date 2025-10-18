@@ -1,25 +1,19 @@
-import { model } from 'dynamoose';
 import type { BaseContext, ContextFunction } from '@apollo/server';
-import type {
-  LambdaContextFunctionArgument,
-  Item as ItemType,
-  Context,
-} from './types';
-import ItemModel from './Item.schema';
-import getEnv from './getEnv';
+import type { LambdaContextFunctionArgument, Context } from './types';
+import { startController } from './itemController';
 
-const setContext: ContextFunction<
+export const setContext: ContextFunction<
   [LambdaContextFunctionArgument],
   BaseContext
 > = async ({ event, context }): Promise<Context> => {
   const { id } = event.headers;
-  const Item = model<ItemType>(getEnv().tableName, ItemModel);
+  const itemController = startController();
 
   return {
     ...context,
     ownerId: id,
     event,
-    Item,
+    itemController,
   };
 };
 

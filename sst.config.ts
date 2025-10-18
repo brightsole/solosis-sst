@@ -51,9 +51,8 @@ export default $config({
     // });
     // then you put it into the environment below
 
-    api.route('ANY /', {
-      handler: 'src/server.handler',
-      runtime: 'nodejs18.x',
+    const functionConfig = {
+      runtime: 'nodejs22.x',
       timeout: '20 seconds',
       memory: '1024 MB',
       nodejs: {
@@ -62,6 +61,21 @@ export default $config({
       environment: {
         TABLE_NAME: itemsTable.name,
       },
+    } as const;
+
+    api.route('ANY /graphql', {
+      ...functionConfig,
+      handler: 'src/graphqlHandler.handler',
+    });
+
+    api.route('ANY /items', {
+      ...functionConfig,
+      handler: 'src/restHandler.handler',
+    });
+
+    api.route('ANY /items/{proxy+}', {
+      ...functionConfig,
+      handler: 'src/restHandler.handler',
     });
 
     return {

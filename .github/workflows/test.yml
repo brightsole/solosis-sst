@@ -35,7 +35,6 @@ jobs:
   sst-diff:
     needs: install-and-test
     runs-on: ubuntu-latest
-  if: github.event_name == 'pull_request'
     permissions:
       contents: read
       id-token: write
