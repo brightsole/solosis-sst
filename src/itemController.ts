@@ -1,18 +1,30 @@
 import { Condition, model } from 'dynamoose';
 import { nanoid } from 'nanoid';
+import { LRUCache } from 'lru-cache';
 import type { Item, DBItem, ModelType } from './types';
 import ItemSchema from './Item.schema';
 import env from './env';
 
+const cache = new LRUCache<string, DBItem>({
+  max: 1000,
+});
+
 export const createItemController = (ItemModel: ModelType) => ({
-  getById: (id: string) => ItemModel.get(id),
+  getById: async (id: string) => {
+    const cachedItem = cache.get(id);
+    if (cachedItem) return cachedItem;
+
+    const item = await ItemModel.get(id);
+    if (item) cache.set(id, item);
+    return item;
+  },
 
   listByOwner: (ownerId?: string) =>
     ItemModel.query('ownerId').eq(ownerId).using('ownerId').exec(),
 
-  create: (input: Partial<Item>, ownerId?: string) => {
+  create: async (input: Partial<Item>, ownerId?: string) => {
     if (!ownerId) throw new Error('Unauthorized');
-    return ItemModel.create(
+    const item = await ItemModel.create(
       {
         id: nanoid(),
         ownerId,
@@ -22,12 +34,14 @@ export const createItemController = (ItemModel: ModelType) => ({
         overwrite: false,
       },
     );
+    cache.set(item.id, item);
+    return item;
   },
 
   update: async (input: Partial<Item>, ownerId?: string) => {
     const { id, ...rest } = input;
 
-    return ItemModel.update(
+    const updatedItem = await ItemModel.update(
       { id },
       { ...rest, ownerId },
       {
@@ -40,6 +54,8 @@ export const createItemController = (ItemModel: ModelType) => ({
         returnValues: 'ALL_NEW',
       },
     );
+    if (updatedItem?.id) cache.set(updatedItem.id, updatedItem);
+    return updatedItem;
   },
 
   remove: async (id: string, ownerId?: string) => {
@@ -47,6 +63,7 @@ export const createItemController = (ItemModel: ModelType) => ({
       condition: new Condition().where('ownerId').eq(ownerId),
     });
 
+    cache.delete(id);
     return { ok: true };
   },
 });

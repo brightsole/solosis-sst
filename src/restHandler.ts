@@ -28,7 +28,7 @@ export const createRestApp = () => {
   });
 
   app.get('/items', async (req, res) => {
-    const ownerId = req.query.ownerId || req.header('id');
+    const ownerId = req.query.ownerId || req.header('x-user-id');
 
     const items = await itemController.listByOwner(ownerId as string);
     res.json(items);
@@ -42,7 +42,7 @@ export const createRestApp = () => {
   app.put('/items/:id', async (req, res) => {
     const item = await itemController.update(
       { id: req.params.id, ...req.body },
-      req.header('id'),
+      req.header('x-user-id'),
     );
 
     res.json(item);

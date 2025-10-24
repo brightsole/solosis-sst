@@ -6,12 +6,12 @@ export const setContext: ContextFunction<
   [LambdaContextFunctionArgument],
   BaseContext
 > = async ({ event, context }): Promise<Context> => {
-  const { id } = event.headers;
+  const userId = event.headers['x-user-id'];
   const itemController = startController();
 
   return {
     ...context,
-    ownerId: id,
+    ownerId: userId,
     event,
     itemController,
   };
