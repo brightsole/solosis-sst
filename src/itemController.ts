@@ -1,7 +1,11 @@
 import { Condition, model } from 'dynamoose';
 import { nanoid } from 'nanoid';
 import { LRUCache } from 'lru-cache';
-import type { Item, DBItem, ModelType } from './types';
+import type {
+  MutationCreateItemArgs,
+  UpdateItemInput,
+} from './generated/graphql';
+import type { DBItem, ModelType } from './types';
 import ItemSchema from './Item.schema';
 import env from './env';
 
@@ -19,10 +23,13 @@ export const createItemController = (ItemModel: ModelType) => ({
     return item;
   },
 
-  listByOwner: (ownerId?: string) =>
+  listByOwner: (ownerId?: string | null) =>
     ItemModel.query('ownerId').eq(ownerId).using('ownerId').exec(),
 
-  create: async (input: Partial<Item>, ownerId?: string) => {
+  create: async (
+    input: Pick<MutationCreateItemArgs, 'name' | 'description'>,
+    ownerId?: string,
+  ) => {
     if (!ownerId) throw new Error('Unauthorized');
     const item = await ItemModel.create(
       {
@@ -38,7 +45,7 @@ export const createItemController = (ItemModel: ModelType) => ({
     return item;
   },
 
-  update: async (input: Partial<Item>, ownerId?: string) => {
+  update: async (input: UpdateItemInput, ownerId?: string) => {
     const { id, ...rest } = input;
 
     const updatedItem = await ItemModel.update(

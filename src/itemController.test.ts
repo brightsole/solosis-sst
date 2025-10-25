@@ -1,7 +1,7 @@
-import { ModelType, Item } from './types';
+import type { ModelType, DBItem } from './types';
 import { Query as QueryType } from 'dynamoose/dist/ItemRetriever';
 
-type ItemModelMock = jest.Mocked<ModelType & QueryType<Item>>;
+type ItemModelMock = jest.Mocked<ModelType & QueryType<DBItem>>;
 
 let createItemController: (typeof import('./itemController'))['createItemController'];
 

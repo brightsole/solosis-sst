@@ -8,32 +8,25 @@ import type {
 import { createItemController } from './itemController';
 
 export type GatewayEvent = APIGatewayProxyEvent | APIGatewayProxyEventV2;
+
 export interface LambdaContextFunctionArgument {
   event: GatewayEvent;
   context: LambdaContext;
 }
 
-export type Item = {
-  description?: string;
-  createdAt: number;
-  updatedAt: number;
+export type DBItem = DynamooseItem & {
+  id: string;
   ownerId: string;
-  name?: string;
-  id: string;
+  name?: string | null;
+  description?: string | null;
+  createdAt?: Date | null;
+  updatedAt?: Date | null;
 };
-export type DBItem = DynamooseItem & Item;
-export type ModelType = Model<DBItem>;
 
-export type IdObject = {
-  id: string;
-};
+export type ModelType = Model<DBItem>;
 
 export type Context = {
   itemController: ReturnType<typeof createItemController>;
   ownerId?: string;
   event: unknown;
-};
-
-export type Affirmative = {
-  ok: boolean;
 };

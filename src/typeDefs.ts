@@ -25,7 +25,6 @@ export default gql`
   input UpdateItemInput {
     id: String!
     name: String
-    ownerId: String!
     description: String
   }
 

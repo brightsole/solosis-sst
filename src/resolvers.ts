@@ -1,48 +1,39 @@
 import { GraphQLDateTime, GraphQLJSONObject } from 'graphql-scalars';
-import type { Context, IdObject, Item } from './types';
+import type { Resolvers } from './generated/graphql';
+import type { Context } from './types';
 
-export default {
+const resolvers: Resolvers<Context> = {
   Query: {
-    item: async (
-      _: undefined,
-      { id }: { id: string },
-      { itemController }: Context,
-    ) => itemController.getById(id),
+    item: async (_parent, { id }, { itemController }) =>
+      itemController.getById(id),
     // for extra security, we could ignore the props passed in, and instead only grab items that belong to
     // the ownerId passed in the headers. This could also be overly limiting if items aren't private
-    items: async (
-      _: undefined,
-      { query: { ownerId } }: { query: { ownerId: string } },
-      { itemController }: Context,
-    ) => itemController.listByOwner(ownerId),
+    items: async (_parent, { query: { ownerId } }, { itemController }) =>
+      itemController.listByOwner(ownerId),
   },
 
   Mutation: {
     createItem: async (
-      _: undefined,
-      { name, description }: { name?: string; description?: string },
-      { ownerId, itemController }: Context,
-    ): Promise<Item> => itemController.create({ name, description }, ownerId),
+      _parent,
+      { name, description },
+      { ownerId, itemController },
+    ) => itemController.create({ name, description }, ownerId),
 
-    updateItem: async (
-      _: undefined,
-      { input: partialItem }: { input: Partial<Item> },
-      { ownerId, itemController }: Context,
-    ): Promise<Item> => itemController.update(partialItem, ownerId),
+    updateItem: async (_parent, { input }, { ownerId, itemController }) =>
+      itemController.update(input, ownerId),
 
-    deleteItem: async (
-      _: undefined,
-      { id }: IdObject,
-      { ownerId, itemController }: Context,
-    ) => itemController.remove(id, ownerId),
+    deleteItem: async (_parent, { id }, { ownerId, itemController }) =>
+      itemController.remove(id, ownerId),
   },
 
   Item: {
     // for finding out the info of the other items in the system
-    __resolveReference: async ({ id }: IdObject, { itemController }: Context) =>
+    __resolveReference: async ({ id }, { itemController }) =>
       itemController.getById(id),
   },
 
   DateTime: GraphQLDateTime,
   JSONObject: GraphQLJSONObject,
 };
+
+export default resolvers;

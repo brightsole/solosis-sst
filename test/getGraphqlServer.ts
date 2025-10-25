@@ -13,6 +13,6 @@ export default (_context: any = {}) =>
         resolvers,
       },
     ]),
-    maxRecursiveSelections: 7,
+    introspection: true,
     plugins: [ApolloServerPluginInlineTraceDisabled()],
   });
