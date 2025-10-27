@@ -11,7 +11,7 @@ export default gql`
     )
 
   type Affirmative {
-    ok: Boolean!
+    ok: Boolean! @shareable
   }
 
   type Item @key(fields: "id") {
@@ -28,13 +28,13 @@ export default gql`
     description: String
   }
 
-  input QueryObject {
+  input ItemQueryObject {
     ownerId: String
   }
 
   type Query {
     item(id: ID!): Item
-    items(query: QueryObject!): [Item]
+    items(query: ItemQueryObject!): [Item]
   }
 
   type Mutation {
