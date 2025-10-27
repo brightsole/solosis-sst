@@ -59,7 +59,7 @@ describe('REST handler', () => {
               headers: {
                 'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(payload),
-                id: 'owner-1',
+                'x-user-id': 'owner-1',
               },
             },
             (res) => {

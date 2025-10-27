@@ -35,7 +35,7 @@ export const createRestApp = () => {
   });
 
   app.post('/items', async (req, res) => {
-    const item = await itemController.create(req.body, req.header('id'));
+    const item = await itemController.create(req.body, req.header('x-user-id'));
     res.status(201).json(item);
   });
 
@@ -49,7 +49,10 @@ export const createRestApp = () => {
   });
 
   app.delete('/items/:id', async (req, res) => {
-    const result = await itemController.remove(req.params.id, req.header('id'));
+    const result = await itemController.remove(
+      req.params.id,
+      req.header('x-user-id'),
+    );
     res.json(result);
   });
 
