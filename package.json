@@ -40,7 +40,7 @@
   },
   "dependencies": {
     "@apollo/server": "^5.0.0",
-    "@apollo/subgraph": "^2.11.3",
+    "@apollo/subgraph": "^2.12.1",
     "@as-integrations/aws-lambda": "^4.0.1",
     "@vendia/serverless-express": "^4.12.6",
     "dynamoose": "^4.0.4",
