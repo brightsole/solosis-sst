@@ -44,7 +44,7 @@
     "@as-integrations/aws-lambda": "^4.0.1",
     "@vendia/serverless-express": "^4.12.6",
     "dynamoose": "^4.0.4",
-    "envalid": "^8.1.0",
+    "envalid": "^8.1.1",
     "express": "^5.1.0",
     "graphql": "^16.12.0",
     "graphql-scalars": "^1.25.0",
